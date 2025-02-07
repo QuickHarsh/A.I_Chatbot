@@ -1,23 +1,31 @@
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.message { animation: fadeIn 0.3s ease-in-out; }
-
-#profileImage {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-.bot-image {
-    width: 35px;
-    height: 35px;
-    object-fit: cover;
-    border-radius: 50%;
+@keyframes wave {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
 }
 
-.dark-mode {
-    background-color: #262c1a;
-    color: white;
+.message-enter {
+    animation: wave 0.6s ease-in-out;
+}
+
+.nova-gradient {
+    background: linear-gradient(135deg, #4F46E5 0%, #8B5CF6 100%);
+}
+
+.nova-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.nova-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.nova-scrollbar::-webkit-scrollbar-thumb {
+    background: #4F46E5;
+    border-radius: 4px;
+}
+
+.dark .nova-scrollbar::-webkit-scrollbar-thumb {
+    background: #818CF8;
 }

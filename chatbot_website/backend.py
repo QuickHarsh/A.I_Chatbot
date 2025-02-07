@@ -13,17 +13,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+chat_history = []
+
 class ChatRequest(BaseModel):
     user_message: str
 
 @app.post("/chat/")
 async def chat(request: ChatRequest):
     try:
-        response = ollama.chat(model="llama3.2", messages=[{"role": "user", "content": request.user_message}])
-        
-        print("Ollama Response:", response)
+        chat_history.append({"role": "user", "content": request.user_message})
 
-        return {"response": response["message"]["content"]}
+        response = ollama.chat(model="llama3.2", messages=chat_history)
+
+        ai_response = response["message"]["content"]
+        chat_history.append({"role": "assistant", "content": ai_response})
+
+        print("Ollama Response:", ai_response)
+
+        return {"response": ai_response}
+
     except Exception as e:
         print("Error:", str(e))
         raise HTTPException(status_code=500, detail=str(e))

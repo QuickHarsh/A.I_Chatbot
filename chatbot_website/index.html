@@ -1,47 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT KA PAPA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>LAPPU A.I</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        nova: {
+                            primary: '#4F46E5',
+                            secondary: '#10B981',
+                            accent: '#F59E0B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-100 transition duration-300">
-    <div class="h-screen flex flex-col">
-
-        <div class="bg-blue-600 text-white p-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <label for="uploadProfile" class="cursor-pointer">
-                    <input type="file" id="uploadProfile" accept="image/*" hidden>
-                    <img id="profileImage" src="https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg" alt="User Avatar">
-                </label>
-                <div>
-                    <p class="font-bold">Anchal A.I</p>
-                    <p class="text-sm opacity-80">Online</p>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="h-screen flex">
+        <div class="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+            <div class="p-6 nova-gradient text-white">
+                <div class="flex items-center space-x-3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" 
+                         class="w-12 h-12 object-contain animate-pulse">
+                    <h1 class="text-2xl font-bold">LAPPU AI</h1>
                 </div>
             </div>
-            <button id="themeToggle" class="bg-white text-gray-800 px-3 py-1 rounded-md">
-                🌙 Dark Mode
-            </button>
+            
+            <div class="flex-1 overflow-y-auto nova-scrollbar p-4 space-y-2">
+                <button class="w-full flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                    <i class="fas fa-comment-medical text-nova-primary"></i>
+                    <span>New Chat</span>
+                </button>
+                <div class="py-4">
+                    <h3 class="text-sm text-gray-500 dark:text-gray-400 mb-2">Previous Chats</h3>
+                    <div class="space-y-2">
+                        <div class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
+                            Today's Baatchit
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <img id="profileImage" src="https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg" 
+                         class="w-10 h-10 rounded-full border-2 border-nova-primary">
+                    <div>
+                        <p class="font-medium">QuickHarsh</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Free Plan</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-            <p class="text-center text-gray-500">Start chatting...</p>
+        <div class="flex-1 flex flex-col">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-4">
+                    <div class="w-3 h-3 rounded-full bg-nova-secondary animate-pulse"></div>
+                    <p class="text-lg font-medium">LAPPU AI Assistant</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-cog text-nova-primary"></i>
+                    </button>
+                    <button id="themeToggle" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-moon text-nova-primary" id="themeIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="chatBox" class="flex-1 overflow-y-auto nova-scrollbar p-6 space-y-8">
+                <div class="max-w-4xl mx-auto text-center py-20 space-y-4">
+                    <div class="w-24 h-24 bg-nova-primary rounded-full mx-auto flex items-center justify-center">
+                        <i class="fas fa-robot text-white text-4xl"></i>
+                    </div>
+                    <h1 class="text-4xl font-bold">Phir aa Gaye Meri Madad Lene ?</h1>
+                    <div class="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+                        <div class="p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                            Suggest fun weekend activities
+                        </div>
+                        <div class="p-4 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+                            Become My DSA Teacher
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="max-w-4xl mx-auto relative">
+                    <div class="flex space-x-4">
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                            <i class="fas fa-magic text-nova-primary"></i>
+                        </button>
+                        <input id="userInput" type="text" placeholder="Ask Lappu anything..." 
+                               class="flex-1 px-6 py-4 bg-white dark:bg-gray-800 rounded-full shadow-sm 
+                                      border border-gray-200 dark:border-gray-700 focus:outline-none 
+                                      focus:border-nova-primary focus:ring-2 focus:ring-nova-primary/20 
+                                      text-gray-800 dark:text-white">
+                        <button id="sendButton" class="absolute right-3 top-3 px-3 py-2 bg-nova-primary text-white 
+                                                      rounded-full hover:bg-nova-secondary transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+                        LAPPU AI can never make mistakes. Never Consider checking important information.                       
+                    </p>
+                    <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+                        @The Harsh Production                       
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <div class="p-4 bg-gray-200 flex items-center space-x-2">
-            <input id="userInput" type="text" placeholder="Type a message..."
-                class="flex-1 px-4 py-2 rounded-lg border bg-white text-black">
-            <button id="sendButton" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send</button>
-            <button id="clearChat" class="px-4 py-2 bg-red-500 text-white rounded-lg">🗑 Clear</button>
-        </div>
-
     </div>
-
     <script src="lallu.js"></script>
 </body>
 </html>

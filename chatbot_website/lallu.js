@@ -1,102 +1,111 @@
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+let darkMode = localStorage.getItem('novaDarkMode') === 'true';
+
+const applyTheme = () => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    themeIcon.classList.toggle('fa-moon', !darkMode);
+    themeIcon.classList.toggle('fa-sun', darkMode);
+    if (darkMode) {
+        document.documentElement.classList.add('text-white');
+    } else {
+        document.documentElement.classList.remove('text-white');
+    }
+    localStorage.setItem('novaDarkMode', darkMode);
+};
+
+themeToggle.addEventListener('click', () => {
+    darkMode = !darkMode;
+    applyTheme();
+});
+
+applyTheme();
+
 const chatBox = document.getElementById("chatBox");
-        const userInput = document.getElementById("userInput");
-        const sendButton = document.getElementById("sendButton");
-        const themeToggle = document.getElementById("themeToggle");
-        const clearChat = document.getElementById("clearChat");
-        const uploadProfile = document.getElementById("uploadProfile");
-        const profileImage = document.getElementById("profileImage");
+const userInput = document.getElementById("userInput");
+const sendButton = document.getElementById("sendButton");
 
-        let darkMode = false;
-        let chatHistory = [];
+const createMessage = (role, content) => {
+    const message = document.createElement('div');
+    message.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} space-x-4`;
 
-        function appendMessage(role, text) {
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message", "flex", "items-start", "space-x-3");
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            if (role === "user") {
-                messageDiv.classList.add("justify-end");
-                messageDiv.innerHTML = `
-                    <img src="https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg" class="bot-image">
-                    <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-md">${text}</div>
-                `;
-            } else {
-                messageDiv.innerHTML = `
-                    <img src="https://png.pngtree.com/png-vector/20220707/ourmid/pngtree-chatbot-robot-concept-chat-bot-png-image_5632381.png" class="bot-image">
-                    <div class="bg-gray-200 text-black px-4 py-2 rounded-lg max-w-md">${text}</div>
-                `;
-            }
+    message.innerHTML = `
+        ${role === 'ai' ? `
+            <div class="w-10 h-10 rounded-full bg-nova-primary flex items-center justify-center">
+                <i class="fas fa-robot text-white"></i>
+            </div>
+        ` : ''}
+        
+        <div class="max-w-xl ${role === 'user' ? 'bg-nova-primary text-white' : 'bg-gray-100 dark:bg-gray-800'} 
+            p-4 rounded-2xl ${role === 'user' ? 'rounded-br-none' : 'rounded-bl-none'} 
+            transition-all message-enter">
+            <p class="text-gray-800 dark:text-white">${content}</p>
+            <div class="text-xs opacity-70 mt-2 flex items-center justify-between">
+                <span>${time}</span>
+                <div class="flex space-x-2">
+                    <button class="hover:opacity-70">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="hover:opacity-70">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        ${role === 'user' ? `
+            <div class="w-10 h-10 rounded-full bg-nova-secondary flex items-center justify-center">
+                <i class="fas fa-user text-white"></i>
+            </div>
+        ` : ''}
+    `;
 
-        sendButton.addEventListener("click", async () => {
-            let userMessage = userInput.value.trim();
-            if (!userMessage) return;
+    return message;
+};
 
-            appendMessage("user", userMessage);
-            userInput.value = "";
-            chatHistory.push({ user: userMessage });
+sendButton.addEventListener('click', async () => {
+    const message = userInput.value.trim();
+    if (!message) return;
 
-            const typingDiv = document.createElement("div");
-            typingDiv.classList.add("message", "flex", "items-start", "space-x-3");
-            typingDiv.innerHTML = `<div class="bg-gray-300 text-black px-4 py-2 rounded-lg max-w-md">Typing...</div>`;
-            chatBox.appendChild(typingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.appendChild(createMessage('user', message));
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
+    const typing = document.createElement('div');
+    typing.className = 'flex space-x-4 items-center';
+    typing.innerHTML = `
+        <div class="w-10 h-10 rounded-full bg-nova-primary flex items-center justify-center">
+            <i class="fas fa-robot text-white"></i>
+        </div>
+        <div class="flex space-x-2 bg-gray-100 dark:bg-gray-800 p-4 rounded-2xl">
+            <div class="w-2 h-2 bg-nova-primary rounded-full animate-bounce"></div>
+            <div class="w-2 h-2 bg-nova-primary rounded-full animate-bounce delay-100"></div>
+            <div class="w-2 h-2 bg-nova-primary rounded-full animate-bounce delay-200"></div>
+        </div>
+    `;
+    chatBox.appendChild(typing);
+    chatBox.scrollTop = chatBox.scrollHeight;
 
-            try {
-                let response = await fetch("http://127.0.0.1:8000/chat/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ user_message: userMessage })
-                });
-
-                let data = await response.json();
-                chatBox.removeChild(typingDiv);
-
-                if (response.ok) {
-                    appendMessage("bot", data.response);
-                    chatHistory.push({ bot: data.response });
-                } else {
-                    appendMessage("bot", "Error: " + data.detail);
-                }
-            } catch (error) {
-                chatBox.removeChild(typingDiv);
-                appendMessage("bot", "Failed to fetch response.");
-            }
+    setTimeout(async () => {
+        chatBox.removeChild(typing);
+        const response = await fetch('http://127.0.0.1:8000/chat/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_message: message })
         });
+        
+        const data = await response.json();
+        chatBox.appendChild(createMessage('ai', data.response || "I'm having trouble connecting right now."));
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 1500);
 
-        userInput.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
-                sendButton.click();
-            }
-        });
+    userInput.value = '';
+});
 
-        clearChat.addEventListener("click", () => {
-            chatBox.innerHTML = `<p class="text-center text-gray-500">Chat cleared.</p>`;
-            chatHistory = [];
-        });
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendButton.click();
+    }
+});
 
-        themeToggle.addEventListener("click", () => {
-            darkMode = !darkMode;
-            document.body.classList.toggle("dark-mode");
-            themeToggle.textContent = darkMode ? "☀ Light Mode" : "🌙 Dark Mode";
-
-            chatBox.classList.toggle("bg-gray-900");
-            chatBox.classList.toggle("text-white");
-
-            document.querySelector(".p-4.bg-gray-200").classList.toggle("bg-gray-800");
-        });
-
-        uploadProfile.addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    profileImage.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
