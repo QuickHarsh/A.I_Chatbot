@@ -87,16 +87,22 @@ sendButton.addEventListener('click', async () => {
     chatBox.scrollTop = chatBox.scrollHeight;
 
     setTimeout(async () => {
-        chatBox.removeChild(typing);
-        const response = await fetch('http://127.0.0.1:8000/chat/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_message: message })
-        });
-        
-        const data = await response.json();
-        chatBox.appendChild(createMessage('ai', data.response || "I'm having trouble connecting right now."));
-        chatBox.scrollTop = chatBox.scrollHeight;
+        try {
+            const response = await fetch('/chat/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_message: message })
+            });
+            
+            const data = await response.json();
+            chatBox.removeChild(typing);
+            chatBox.appendChild(createMessage('ai', data.response || "I'm having trouble connecting right now."));
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (error) {
+            console.error('Error:', error);
+            chatBox.removeChild(typing);
+            chatBox.appendChild(createMessage('ai', "I'm having trouble connecting right now. Please try again later."));
+        }
     }, 1500);
 
     userInput.value = '';
